@@ -1,0 +1,28 @@
+import boto3
+
+# Cria o cliente do DynamoDB
+dynamodb = boto3.client('dynamodb')
+
+def lambda_handler(event, context):
+    # Cria uma tabela no DynamoDB
+    response = dynamodb.create_table(
+        TableName='minha-tabela',
+        KeySchema=[
+            {
+                'AttributeName': 'id',
+                'KeyType': 'HASH'
+            }
+        ],
+        AttributeDefinitions=[
+            {
+                'AttributeName': 'id',
+                'AttributeType': 'S'
+            }
+        ],
+        ProvisionedThroughput={
+            'ReadCapacityUnits': 1,
+            'WriteCapacityUnits': 1
+        }
+    )
+    
+    return response
