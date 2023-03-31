@@ -1,0 +1,48 @@
+import json
+import boto3
+
+dynamodb = boto3.resource('dynamodb')
+table = dynamodb.Table('minha-tabela')
+
+def lambda_handler(event, context):
+    # Adicionar um novo item à tabela
+    item = {
+        'id': '1',
+        'nome': 'João',
+        'idade': 30
+    }
+
+    table.put_item(Item=item)
+
+    # Recuperar um item da tabela
+    response = table.get_item(
+        Key={
+            'id': '1'
+        }
+    )
+
+    item = response['Item']
+    print(item)
+
+    # Atualizar um item na tabela
+    table.update_item(
+        Key={
+            'id': '1'
+        },
+        UpdateExpression='SET idade = :val1',
+        ExpressionAttributeValues={
+            ':val1': 35
+        }
+    )
+
+    # Excluir um item da tabela
+    table.delete_item(
+        Key={
+            'id': '1'
+        }
+    )
+
+    return {
+        'statusCode': 200,
+        'body': json.dumps('Operações na tabela do DynamoDB concluídas com sucesso!')
+    }
